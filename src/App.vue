@@ -58,14 +58,15 @@
       <li>ค้นหา</li>
     </ul>
 
+    <div v-for="category in categories" :key="category.name">
+      <p>{{ category.name }}</p>
+    </div>
+
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
-const url = "https://panjs.com/ywc18.json";
-const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -75,14 +76,14 @@ export default {
       searchedText: ""
     }
   },
-  async mounted() {
-    try {
-      const response = await axios(proxyUrl + url);
-      this.data = await response.data;
-      console.log(this.data)
-    } catch (error) {
-      console.error(error);
-    }
+  computed: mapState([
+    'categories',
+    'provinces',
+    'priceRange',
+    'merchants'
+  ]),
+  mounted() {
+    this.$store.dispatch('loadData')
   },
   methods: {
     handleSearch(e) {
