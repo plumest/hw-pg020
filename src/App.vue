@@ -58,8 +58,24 @@
       <li>ค้นหา</li>
     </ul>
 
-    <div v-for="category in categories" :key="category.name">
-      <p>{{ category.name }}</p>
+<!--    <div v-for="category in categories" :key="category.name">-->
+<!--      <p>{{ category.name }}</p>-->
+<!--    </div>-->
+
+    <div class="container-fluid my-container">
+      <div class="px-3 py-4">
+        <h5 class="mb-5" style="letter-spacing: -0.02em; font-weight: 600">ผลการค้นหา <span>{{ text }}</span> ทั้งหมด</h5>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="shop-container">
+          <Card
+              v-for="merchant in merchants"
+              :key="merchant.shopNameTH"
+              :merchant="merchant"
+          />
+        </div>
+      </div>
     </div>
 
   </div>
@@ -67,13 +83,15 @@
 
 <script>
 import { mapState } from 'vuex'
+import Card from "@/components/Card";
 
 export default {
   name: 'App',
   data() {
     return {
       data: {},
-      searchedText: ""
+      searchedText: "",
+      text: "ads"
     }
   },
   computed: mapState([
@@ -94,7 +112,7 @@ export default {
     }
   },
   components: {
-
+    Card
   }
 }
 </script>
@@ -103,6 +121,16 @@ export default {
 #app {
 
 }
+
+.my-container {
+  min-height: 100vh;
+  background-image: url("./assets/result-bg.png");
+  background-position: center center;
+  background-attachment: fixed;
+  /*background-repeat: no-repeat;*/
+  background-size: cover;
+}
+
 
 .navbar {
   width: 100%;
