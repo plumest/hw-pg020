@@ -1,7 +1,7 @@
 <template>
-  <div class="my-card d-flex justify-content-left w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince">
-    <div class="card-img col-12 col-md-3" :style="bgImage" />
-    <div class="card-content">
+  <div class="my-card d-flex justify-content-left flex-wrap w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince">
+    <div class="card-img col-12 col-lg-3" :style="bgImage" />
+    <div class="card-content col-12 col-lg-9 p-3">
       <!--   Row 1   -->
       <div class="d-flex align-items-center">
         <h5 class="card-title m-0 mr-2 text-dark">{{ merchant.shopNameTH }}</h5>
@@ -10,7 +10,7 @@
       </div>
 
       <!--   Row 2   -->
-      <ul class="card-subtitle d-flex align-items-center p-0">
+      <ul class="card-subtitle d-flex align-items-center flex-wrap p-0">
         <li class="">{{ merchant.subcategoryName }}</li>
         <li class="" v-if="merchant.priceLevel">
           <span :class="merchant.priceLevel >= 1 ? 'text-dark' : ''">฿</span>
@@ -146,11 +146,12 @@ strong {
 
 .card-subtitle li {
   display: inline;
+  padding-right: 12px;
 }
 
 .card-subtitle li+li:before {
-  padding: 0 12px;
-  content: "/\00a0";
+  padding-right: 12px;
+  content: "|";
 }
 
 .card-icon {
