@@ -84,8 +84,141 @@
         </div>
 
         <div class="mr-3">
-          <img class="d-block d-md-none" src="./assets/filter.png" alt="filter" style="height: 20px">
+          <img
+              class="filter-btn d-block d-md-none"
+              src="./assets/filter.png"
+              alt="filter"
+              style="height: 20px; cursor: pointer"
+              @click="handleActiveFilter()"
+          >
         </div>
+
+      <!--    Active Filter    -->
+        <div class="active-filter" :class="isFilterActive ? 'd-block' : 'd-none'">
+          <!--     Top     -->
+          <div class="active-filter-top d-flex justify-content-center align-items-center">
+            <div class="active-filter-logo" @click="handleActiveFilter()">
+              <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="left" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                <path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path>
+              </svg>
+            </div>
+            กรอกผล
+          </div>
+          <!--     Top     -->
+          <div class="bg-white p-3">
+            <!--      ประเภทร้าน      -->
+            <div class="filter-title">ประเภทร้านค้า</div>
+            <div class="mt-3 mb-4">
+              <label class="choice">ทั้งหมด
+                <input type="radio" value="ทั้งหมด" id="ทั้งหมด" v-model="categorySelectedName">
+                <span class="checkmark"></span>
+              </label>
+
+              <label class="choice" v-for="category in categories" :key="category.name">{{ category.name }}
+                <input type="radio" :value="category.name" :id="category.name" v-model="categorySelectedName">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <!--      จังหวัด/ใกล้ฉัน      -->
+            <div class="filter-title">จังหวัด/ใกล้ฉัน</div>
+            <div class="dropdown-wrapper mb-4">
+              <div class="dropdown-selector">
+                <span>
+                  <input
+                      class="dropbtn"
+                      type="search"
+                      :value="provinceSelected"
+                      readonly
+                      autocomplete="off"
+                  >
+                </span>
+                <span class="dropdown-selected">
+                  <svg v-if="provinceSelected === 'พื้นที่ใกล้ฉัน'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  <svg v-if="provinceSelected === 'สถานที่ทั้งหมด'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  {{ provinceSelected }}
+                  <svg viewBox="64 64 896 896" focusable="false" class="dropdown-icon" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="dropdown-content">
+                <div @click="handleProvinceSelected('พื้นที่ใกล้ฉัน')" :class="provinceSelected === 'พื้นที่ใกล้ฉัน' ? 'selected-item' : ''">
+                  <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>พื้นที่ใกล้ฉัน
+                </div>
+
+                <div @click="handleProvinceSelected('สถานที่ทั้งหมด')" :class="provinceSelected === 'สถานที่ทั้งหมด' ? 'selected-item' : ''">
+                  <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>สถานที่ทั้งหมด
+                </div>
+
+                <div
+                    v-for="province in provinces"
+                    :key="province"
+                    :class="provinceSelected === provinces ? 'selected-item' : ''"
+                    @click="handleProvinceSelected(province)"
+                >
+                  {{ province }}
+                </div>
+              </div>
+            </div>
+
+            <!--      ราคา      -->
+            <div class="filter-title">ราคา</div>
+            <div class="dropdown-wrapper mb-4">
+              <div class="dropdown-selector">
+                <span>
+                  <input
+                      class="dropbtn"
+                      type="search"
+                      :value="priceRangeSelected"
+                      readonly
+                      autocomplete="off"
+                  >
+                </span>
+                <span class="dropdown-selected" :class="priceRangeSelected === 'กรุณาเลือกราคา' ? 'text-gray' : ''">{{ priceRangeSelected }}
+                  <svg viewBox="64 64 896 896" focusable="false" class="dropdown-icon" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="dropdown-content">
+                <div @click="handlePriceChange('กรุณาเลือกราคา')" :class="priceRangeSelected === 'กรุณาเลือกราคา' ? 'selected-item' : ''">กรุณาเลือกราคา</div>
+                <div
+                    v-for="price in priceRange"
+                    :key="price"
+                    :class="priceRangeSelected === price ? 'selected-item' : ''"
+                    @click="handlePriceChange(price)"
+                >
+                  {{ price }}
+                </div>
+              </div>
+            </div>
+
+            <!--      subCategories      -->
+            <div v-if="categorySelected.subcategories.length" class="filter-title">ประเภท{{ categorySelected.name }}</div>
+            <div v-if="categorySelected.subcategories.length" class="mt-3">
+              <label class="choice">ทั้งหมด
+                <input type="radio" value="ทั้งหมด" id="หมวดหมู่ย่อยทั้งหมด" v-model="subCategorySelected">
+                <span class="checkmark"></span>
+              </label>
+
+              <label class="choice" v-for="subcategory in categorySelected.subcategories" :key="subcategory">{{ subcategory }}
+                <input type="radio" :value="subcategory" :id="subcategory" v-model="subCategorySelected">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      <!--    Active Filter    -->
       </div>
     </div>
 
@@ -235,6 +368,11 @@ import Card from "@/components/Card";
 
 export default {
   name: 'App',
+  data() {
+    return {
+      isFilterActive: false
+    }
+  },
   computed: {
     categories() {
       return this.$store.state.categories
@@ -296,6 +434,10 @@ export default {
   methods: {
     handleSearch() {
       this.serach = this.searchedText
+    },
+    handleActiveFilter() {
+      document.body.classList.toggle('stop-scrolling')
+      this.isFilterActive = !this.isFilterActive
     },
     handleProvinceSelected(value) {
       this.$store.dispatch('setProvinceSelected', value)
@@ -657,5 +799,34 @@ ul.breadcrumb li a:hover {
   margin-top: -6px;
   color: rgba(0,0,0,.25);
   font-size: 12px;
+}
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+.active-filter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background-color: white;
+}
+
+.active-filter-top {
+  color: white;
+  background-color: #2A4365;
+  font-size: 24px;
+  font-weight: 600;
+  height: 64px;
+}
+
+.active-filter-logo {
+  cursor: pointer;
+  position: absolute;
+  left: 24px;
 }
 </style>

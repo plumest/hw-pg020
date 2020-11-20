@@ -1,9 +1,11 @@
 <template>
   <div class="my-card d-flex justify-content-left flex-wrap w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince">
-    <div class="card-img col-12 col-lg-3" :style="bgImage" />
+    <div class="col-12 col-lg-3 p-0 p-lg-1">
+      <div class="card-img" :style="bgImage" />
+    </div>
     <div class="card-content col-12 col-lg-9 p-3">
       <!--   Row 1   -->
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center mb-2">
         <h5 class="card-title m-0 mr-2 text-dark">{{ merchant.shopNameTH }}</h5>
         <h5 v-if="merchant.isOpen === 'Y'" class="badge badge-success m-0">เปิดอยู่</h5>
         <h5 v-if="merchant.isOpen === 'N'" class="badge badge-secondary m-0">ปิดแล้ว</h5>
@@ -21,8 +23,15 @@
         <li class="">{{ merchant.addressDistrictName + ' ' + merchant.addressProvinceName }}</li>
       </ul>
 
-      <p class="card-text" v-html="merchant.highlightText" />
-      <p><strong>เมนูแนะนำ: </strong>{{ merchant.recommendedItems.join(', ') }}</p>
+      <div class="break-line" />
+
+      <!--   Row 3   -->
+      <p class="card-text mb-1" v-html="merchant.highlightText" />
+
+      <!--   Row 4   -->
+      <p class="mb-2"><strong>เมนูแนะนำ: </strong>{{ merchant.recommendedItems.join(', ') }}</p>
+
+      <!--   Row 5   -->
       <div class="d-flex align-items-center">
         <img
             v-for="facility in merchant.facilities"
@@ -118,6 +127,8 @@ strong {
   background-size: cover;
   background-position: center center;
   border-radius: 2px;
+  width: 100%;
+  height: 100%;
 }
 
 @media only screen and (max-width: 991.98px) {
@@ -144,6 +155,10 @@ strong {
   color: #999999;
 }
 
+.card-text >>> strong {
+  color: rgb(34, 34, 34);
+}
+
 .card-subtitle li {
   display: inline;
   padding-right: 12px;
@@ -152,6 +167,13 @@ strong {
 .card-subtitle li+li:before {
   padding-right: 12px;
   content: "|";
+}
+
+.break-line {
+  width: 65%;
+  height: 1px;
+  background-color: rgb(238, 238, 238);
+  margin: 18px 0;
 }
 
 .card-icon {
