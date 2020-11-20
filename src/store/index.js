@@ -22,7 +22,7 @@ export default new Vuex.Store({
     mutations: {
         setData(state, data) {
             state.categories = data.categories
-            state.provinces = data.provinces
+            state.provinces = data.provinces.sort()
             state.priceRange = data.priceRange
             state.merchants = data.merchants
         },
