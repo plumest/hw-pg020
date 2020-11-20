@@ -102,7 +102,7 @@
       </div>
 
       <div class="d-flex justify-content-center pb-4">
-        <div class="filter-wrapper">
+        <div class="filter-wrapper d-none d-md-block">
           <div class="bg-white p-3">
             <!--      ประเภทร้าน      -->
             <div class="filter-title">ประเภทร้านค้า</div>
@@ -217,7 +217,7 @@
           </div>
         </div>
 
-        <div class="shop-container col-8">
+        <div class="shop-container col-12 col-md-8">
           <Card
               v-for="merchant in merchants"
               :key="merchant.shopNameTH"
@@ -452,6 +452,56 @@ ul.breadcrumb li a:hover {
 
 .choice {
   display: block;
+  position: relative;
+  cursor: pointer;
+  padding-left: 25px;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 100px;
+}
+
+.choice:hover input ~ .checkmark {
+  border-color: #1890ff;
+}
+
+.choice input:checked ~ .checkmark {
+  border-color: #1890ff;
+  background-color: white;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.choice input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.choice .checkmark:after {
+  left: 3px;
+  top: 3px;
+  background-color: #1890ff;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
 }
 
 .dropdown-wrapper {
