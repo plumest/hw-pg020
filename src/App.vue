@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="position-relative">
-      <div class="navbar bg-white d-flex justify-content-center align-items-center p-0 mx-lg-5" style="max-width: 1280px">
+      <div class="navbar bg-white d-flex justify-content-center align-items-center p-0 mx-xl-5" style="max-width: 1280px">
         <div class="nav-brand px-3 px-md-4">
           <a href="/">
             <img class="d-none d-md-block" src="./assets/halfhalf-logo.png" alt="คนละครึ่ง">
@@ -10,33 +10,69 @@
         </div>
 
         <div class="search-filter d-flex align-items-center mr-3 mr-md-4">
-          <span id="nearby" class="px-2 d-none d-md-block" onclick="handleFilterNearby()" >
-            <div class="d-flex align-items-center">
-              <div class="mr-5">
+          <!--     จังหวัด/ใกล้ฉัน     -->
+          <div class="nearby-dropdown-wrapper d-none d-md-block">
+            <div class="nearby-dropdown-selector">
+                <span>
+                  <input
+                      class="dropbtn"
+                      type="search"
+                      :value="provinceSelected"
+                      readonly
+                      autocomplete="off"
+                  >
+                </span>
+              <span class="nearby-dropdown-selected">
+                  <svg v-if="provinceSelected === 'พื้นที่ใกล้ฉัน'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  <svg v-if="provinceSelected === 'สถานที่ทั้งหมด'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  {{ provinceSelected }}
+                  <svg viewBox="64 64 896 896" focusable="false" class="dropdown-icon" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                  </svg>
+                </span>
+            </div>
+            <div class="nearby-dropdown-content">
+              <div @click="handleProvinceSelected('พื้นที่ใกล้ฉัน')" :class="provinceSelected === 'พื้นที่ใกล้ฉัน' ? 'selected-item' : ''">
                 <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
                   <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
-                </svg>
-                <span class="w-100">พื้นที่ใกล้ฉัน</span>
+                </svg>พื้นที่ใกล้ฉัน
               </div>
-              <svg id="arrow-down" width="12px" height="12px" viewBox="64 64 896 896" fill="rgba(0,0,0,.25)">
-                <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"/>
-              </svg>
+
+              <div @click="handleProvinceSelected('สถานที่ทั้งหมด')" :class="provinceSelected === 'สถานที่ทั้งหมด' ? 'selected-item' : ''">
+                <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                  <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                </svg>สถานที่ทั้งหมด
+              </div>
+
+              <div
+                  v-for="province in provinces"
+                  :key="province"
+                  :class="provinceSelected === provinces ? 'selected-item' : ''"
+                  @click="handleProvinceSelected(province)"
+              >
+                {{ province }}
+              </div>
             </div>
-          </span>
+          </div>
 
             <div id="search">
               <input
                   type="search"
                   id="search-input"
                   name="search"
-                  onkeyup="handleSearch()"
+                  @keyup.enter.prevent="handleSearch()"
+                  v-model="searchedText"
                   autocomplete="off"
                   maxlength="50"
                   placeholder="ค้นหา ชื่อ ร้านอาหาร และเครื่องดื่ม ร้านธงฟ้า ร้านค้า OTOP และสินค้าทั่วไป"
               >
             </div>
 
-            <span id="search-suffix">
+            <span id="search-suffix" @click="handleSearch()">
               <div class="d-flex align-items-center">
                 <span>
                   <svg width="1em" height="1em" viewBox="64 64 896 896" fill="currentColor">
@@ -58,17 +94,130 @@
       <li>ค้นหา</li>
     </ul>
 
-<!--    <div v-for="category in categories" :key="category.name">-->
-<!--      <p>{{ category.name }}</p>-->
-<!--    </div>-->
-
     <div class="container-fluid my-container">
       <div class="px-3 py-4">
-        <h5 class="mb-5" style="letter-spacing: -0.02em; font-weight: 600">ผลการค้นหา <span>{{ text }}</span> ทั้งหมด</h5>
+        <h5 class="mb-4" style="letter-spacing: -0.02em; font-weight: 600">
+          ผลการค้นหา <span v-if="categorySelectedName !== 'ทั้งหมด'">{{ categorySelectedName }}</span> ทั้งหมด
+        </h5>
       </div>
 
-      <div class="d-flex justify-content-center">
-        <div class="shop-container">
+      <div class="d-flex justify-content-center pb-4">
+        <div class="filter-wrapper">
+          <div class="bg-white p-3">
+            <!--      ประเภทร้าน      -->
+            <div class="filter-title">ประเภทร้านค้า</div>
+            <div class="mt-3 mb-4">
+              <label class="choice">ทั้งหมด
+                <input type="radio" value="ทั้งหมด" id="ทั้งหมด" v-model="categorySelectedName">
+                <span class="checkmark"></span>
+              </label>
+
+              <label class="choice" v-for="category in categories" :key="category.name">{{ category.name }}
+                <input type="radio" :value="category.name" :id="category.name" v-model="categorySelectedName">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <!--      จังหวัด/ใกล้ฉัน      -->
+            <div class="filter-title">จังหวัด/ใกล้ฉัน</div>
+            <div class="dropdown-wrapper mb-4">
+              <div class="dropdown-selector">
+                <span>
+                  <input
+                      class="dropbtn"
+                      type="search"
+                      :value="provinceSelected"
+                      readonly
+                      autocomplete="off"
+                  >
+                </span>
+                <span class="dropdown-selected">
+                  <svg v-if="provinceSelected === 'พื้นที่ใกล้ฉัน'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  <svg v-if="provinceSelected === 'สถานที่ทั้งหมด'" width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>
+                  {{ provinceSelected }}
+                  <svg viewBox="64 64 896 896" focusable="false" class="dropdown-icon" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="dropdown-content">
+                <div @click="handleProvinceSelected('พื้นที่ใกล้ฉัน')" :class="provinceSelected === 'พื้นที่ใกล้ฉัน' ? 'selected-item' : ''">
+                  <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>พื้นที่ใกล้ฉัน
+                </div>
+
+                <div @click="handleProvinceSelected('สถานที่ทั้งหมด')" :class="provinceSelected === 'สถานที่ทั้งหมด' ? 'selected-item' : ''">
+                  <svg width="16" height="20" viewBox="0 0 14 20" class="mr-2" fill="currentColor">
+                    <path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/>
+                  </svg>สถานที่ทั้งหมด
+                </div>
+
+                <div
+                    v-for="province in provinces"
+                    :key="province"
+                    :class="provinceSelected === provinces ? 'selected-item' : ''"
+                    @click="handleProvinceSelected(province)"
+                >
+                  {{ province }}
+                </div>
+              </div>
+            </div>
+
+            <!--      ราคา      -->
+            <div class="filter-title">ราคา</div>
+            <div class="dropdown-wrapper mb-4">
+              <div class="dropdown-selector">
+                <span>
+                  <input
+                      class="dropbtn"
+                      type="search"
+                      :value="priceRangeSelected"
+                      readonly
+                      autocomplete="off"
+                  >
+                </span>
+                <span class="dropdown-selected" :class="priceRangeSelected === 'กรุณาเลือกราคา' ? 'text-gray' : ''">{{ priceRangeSelected }}
+                  <svg viewBox="64 64 896 896" focusable="false" class="dropdown-icon" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="dropdown-content">
+                <div @click="handlePriceChange('กรุณาเลือกราคา')" :class="priceRangeSelected === 'กรุณาเลือกราคา' ? 'selected-item' : ''">กรุณาเลือกราคา</div>
+                <div
+                    v-for="price in priceRange"
+                    :key="price"
+                    :class="priceRangeSelected === price ? 'selected-item' : ''"
+                    @click="handlePriceChange(price)"
+                >
+                  {{ price }}
+                </div>
+              </div>
+            </div>
+
+            <!--      subCategories      -->
+            <div v-if="categorySelected.subcategories.length" class="filter-title">ประเภท{{ categorySelected.name }}</div>
+            <div v-if="categorySelected.subcategories.length" class="mt-3">
+              <label class="choice">ทั้งหมด
+                <input type="radio" value="ทั้งหมด" id="หมวดหมู่ย่อยทั้งหมด" v-model="subCategorySelected">
+                <span class="checkmark"></span>
+              </label>
+
+              <label class="choice" v-for="subcategory in categorySelected.subcategories" :key="subcategory">{{ subcategory }}
+                <input type="radio" :value="subcategory" :id="subcategory" v-model="subCategorySelected">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="shop-container col-8">
           <Card
               v-for="merchant in merchants"
               :key="merchant.shopNameTH"
@@ -82,33 +231,77 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Card from "@/components/Card";
 
 export default {
   name: 'App',
-  data() {
-    return {
-      data: {},
-      searchedText: "",
-      text: "ads"
+  computed: {
+    categories() {
+      return this.$store.state.categories
+    },
+    provinces() {
+      return this.$store.state.provinces
+    },
+    priceRange() {
+      return this.$store.state.priceRange
+    },
+    merchants() {
+      return this.$store.state.merchants
+    },
+    categorySelectedName: {
+      get() {
+        return this.$store.state.categorySelected.name
+      },
+      set(value) {
+        let data = {name: 'ทั้งหมด', subcategories: []}
+        if (value !== 'ทั้งหมด') {
+          this.$store.state.categories.filter(category => {
+            if (category.name === value) {
+              data = category
+            }
+          })
+        }
+        this.$store.commit("setCategorySelected", data);
+      }
+    },
+    categorySelected() {
+      return this.$store.state.categorySelected
+    },
+    subCategorySelected: {
+      get() {
+        return this.$store.state.subCategorySelected;
+      },
+      set(value) {
+        this.$store.commit("setSubCategorySelected", value);
+      }
+    },
+    provinceSelected() {
+      return this.$store.state.provinceSelected
+    },
+    priceRangeSelected() {
+      return this.$store.state.priceRangeSelected
+    },
+    searchedText: {
+      get() {
+        return this.$store.state.searchedText;
+      },
+      set(value) {
+        this.$store.commit("setSearchedText", value);
+      }
     }
   },
-  computed: mapState([
-    'categories',
-    'provinces',
-    'priceRange',
-    'merchants'
-  ]),
   mounted() {
     this.$store.dispatch('loadData')
   },
   methods: {
-    handleSearch(e) {
-      this.searchedText = e.target.value
+    handleSearch() {
+      this.serach = this.searchedText
     },
-    handleFilterNearby() {
-
+    handleProvinceSelected(value) {
+      this.$store.dispatch('setProvinceSelected', value)
+    },
+    handlePriceChange(value) {
+      this.$store.dispatch('setPriceRangeSelected', value)
     }
   },
   components: {
@@ -120,6 +313,10 @@ export default {
 <style>
 #app {
 
+}
+
+.text-gray {
+  color: #999999;
 }
 
 .my-container {
@@ -156,35 +353,6 @@ export default {
   height: 2.5rem!important;
   border: 0 solid #e2e8f0;
   border-radius: 8px;
-}
-
-#nearby {
-  flex: 1 1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  position: relative;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  line-height: 40px;
-  color: rgba(0,0,0,.85);
-  transition: all .3s cubic-bezier(.645,.045,.355,1);
-  border-right: 1px solid #d9d9d9;
-}
-
-#arrow-down {
-  display: inline-block;
-  text-rendering: optimizeLegibility;
-  top: 53%;
-  right: 11px;
-  width: 12px;
-  height: 12px;
-  margin-top: 6px;
-}
-
-#nearby:hover {
-  cursor: pointer;
 }
 
 #search {
@@ -269,5 +437,175 @@ ul.breadcrumb li:hover {
 
 ul.breadcrumb li a:hover {
   cursor: pointer;
+}
+
+.filter-wrapper {
+  width: 350px;
+  height: 100%;
+  border: 1px solid rgba(160,174,192);
+}
+
+.filter-title {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.choice {
+  display: block;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 32px;
+  border: 1px solid #888888;
+}
+
+.dropdown-wrapper:hover {
+  cursor: pointer;
+  border: 1px solid #40a9ff;
+}
+
+.dropbtn {
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  width: 100%;
+  top: 32px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content div:hover {
+  background-color: #f1f1f1
+}
+
+.dropdown-content .selected-item {
+  background-color: rgba(24, 144, 255, .2);
+}
+
+.dropdown-content .selected-item:hover {
+  background-color: rgba(24, 144, 255, .2);
+}
+
+.dropdown-wrapper:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-selector {
+  position: relative;
+}
+
+.dropdown-selected {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  line-height: 32px;
+  width: calc(100% - 11px);
+  height: 32px;
+  text-align: left;
+}
+
+.dropdown-selected .dropdown-icon {
+  position: absolute;
+  top: 53%;
+  right: 11px;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  color: rgba(0,0,0,.25);
+  font-size: 12px;
+}
+
+/* Nav dropdown */
+.nearby-dropdown-wrapper {
+  flex: 1 1;
+  position: relative;
+  display: inline-block;
+  height: 40px;
+  transition: all .3s cubic-bezier(.645,.045,.355,1);
+  border-right: 1px solid #d9d9d9;
+}
+
+.nearby-dropdown-wrapper:hover {
+  cursor: pointer;
+}
+
+.dropbtn {
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.nearby-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  width: 100%;
+  top: 40px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.nearby-dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.nearby-dropdown-content div:hover {
+  background-color: #f1f1f1
+}
+
+.nearby-dropdown-content .selected-item {
+  background-color: rgba(24, 144, 255, .2);
+}
+
+.nearby-dropdown-content .selected-item:hover {
+  background-color: rgba(24, 144, 255, .2);
+}
+
+.nearby-dropdown-wrapper:hover .nearby-dropdown-content {
+  display: block;
+}
+
+.nearby-dropdown-selector {
+  position: relative;
+}
+
+.nearby-dropdown-selected {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  line-height: 40px;
+  width: calc(100% - 11px);
+  height: 40px;
+  text-align: left;
+}
+
+.nearby-dropdown-selected .dropdown-icon {
+  position: absolute;
+  top: 53%;
+  right: 11px;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  color: rgba(0,0,0,.25);
+  font-size: 12px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="my-card d-flex justify-content-left w-100">
-    <img class="card-img col-12 col-md-3" :src="merchant.coverImageId" :alt="merchant.coverImageId">
+  <div class="my-card d-flex justify-content-left w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince">
+    <div class="card-img col-12 col-md-3" :style="bgImage" />
     <div class="card-content">
       <!--   Row 1   -->
       <div class="d-flex align-items-center">
@@ -41,6 +41,57 @@ export default {
   name: "Card",
   props: {
     merchant: Object
+  },
+  data () {
+    return {
+      bgImage: {
+        'background-image': `url(${this.merchant.coverImageId})`
+      },
+    }
+  },
+  computed: {
+    categorySelected() {
+      return this.$store.state.categorySelected.name
+    },
+    subCategorySelected() {
+      return this.$store.state.subCategorySelected
+    },
+    provinceSelected() {
+      return this.$store.state.provinceSelected
+    },
+    priceRangeSelected() {
+      return this.$store.state.priceRange.indexOf(this.$store.state.priceRangeSelected) + 1
+    },
+    isDisplay() {
+      if (this.categorySelected === 'ทั้งหมด') {
+        return true
+      } else if (this.categorySelected === 'ร้านอาหารและเครื่องดื่ม' && this.merchant.categoryName === 'ร้านอาหาร') {
+        return this.subCategorySelected === 'ทั้งหมด' || this.subCategorySelected === this.merchant.subcategoryName
+      } else if (this.categorySelected === 'สินค้าทั่วไป' && this.merchant.categoryName === 'แฟชั่น') {
+        return this.subCategorySelected === 'ทั้งหมด' || this.subCategorySelected === this.merchant.subcategoryName
+      } else if (this.categorySelected === 'สินค้าทั่วไป' && this.merchant.categoryName === 'งานบริการอื่นๆ / เบ็ดเตล็ด') {
+        if (this.merchant.subcategoryName === 'สินค้า และ บริการ เกี่ยวกับการตกแต่งบ้าน') {
+          return this.subCategorySelected === 'ทั้งหมด' || this.subCategorySelected === 'สินค้าเกี่ยวกับการตกแต่งบ้าน'
+        }
+        return this.subCategorySelected === 'ทั้งหมด' || this.subCategorySelected === this.merchant.subcategoryName
+      } else {
+        return false
+      }
+    },
+    isDisplayByPriceFilter() {
+      if (this.priceRangeSelected){
+        return this.priceRangeSelected === this.merchant.priceLevel
+      } else {
+        return true
+      }
+    },
+    isDisplayByPriceProvince() {
+      if (this.provinceSelected === 'พื้นที่ใกล้ฉัน' || this.provinceSelected === 'สถานที่ทั้งหมด'){
+        return true
+      } else {
+        return this.provinceSelected === this.merchant.addressProvinceName
+      }
+    }
   }
 }
 </script>
@@ -61,7 +112,24 @@ strong {
 }
 
 .card-img {
+  min-height: 14rem;
+  background-color: rgb(236, 236, 236);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  border-radius: 2px;
+}
 
+@media only screen and (max-width: 991.98px) {
+  .card-img {
+
+  }
+}
+
+@media only screen and (min-width: 991.98px) {
+  .card-img {
+
+  }
 }
 
 .card-title {
