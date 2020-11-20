@@ -41,7 +41,7 @@ export default new Vuex.Store({
         },
         setSearchedText(state, value) {
             state.searchedText = value
-        },
+        }
     },
     actions: {
         async loadData(context) {

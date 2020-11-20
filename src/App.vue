@@ -66,15 +66,15 @@
                   type="search"
                   id="search-input"
                   name="search"
-                  @keyup.enter.prevent="handleSearch()"
-                  v-model="searchedText"
+                  @keyup.enter.prevent="handleSearch(text)"
+                  v-model="text"
                   autocomplete="off"
                   maxlength="50"
                   placeholder="ค้นหา ชื่อ ร้านอาหาร และเครื่องดื่ม ร้านธงฟ้า ร้านค้า OTOP และสินค้าทั่วไป"
               >
             </div>
 
-            <span id="search-suffix" @click="handleSearch()">
+            <span id="search-suffix" @click="handleSearch(text)">
               <div class="d-flex align-items-center">
                 <span>
                   <svg width="1em" height="1em" viewBox="64 64 896 896" fill="currentColor">
@@ -376,7 +376,8 @@ export default {
   name: 'App',
   data() {
     return {
-      isFilterActive: false
+      isFilterActive: false,
+      text: ''
     }
   },
   computed: {
@@ -425,21 +426,16 @@ export default {
     priceRangeSelected() {
       return this.$store.state.priceRangeSelected
     },
-    searchedText: {
-      get() {
-        return this.$store.state.searchedText;
-      },
-      set(value) {
-        this.$store.commit("setSearchedText", value);
-      }
+    searchedText() {
+      return this.$store.state.searchedText
     }
   },
   mounted() {
     this.$store.dispatch('loadData')
   },
   methods: {
-    handleSearch() {
-      this.serach = this.searchedText
+    handleSearch(value) {
+      this.$store.dispatch('setSearchedText', value)
     },
     handleActiveFilter() {
       document.body.classList.toggle('stop-scrolling')
@@ -522,17 +518,26 @@ export default {
 
 #search-input {
   width: 100%;
+  text-indent: 20px;
   height: 40px;
   border: none;
+}
+
+#search-input:focus {
+  outline: none;
 }
 
 #search-input:placeholder-shown {
   text-overflow: ellipsis;
 }
 
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration { display: none; }
+
 #search-input::placeholder {
   color: #bebebe;
-  padding-left: 12px;
 }
 
 #search-suffix {

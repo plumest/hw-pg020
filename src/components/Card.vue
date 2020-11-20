@@ -1,5 +1,5 @@
 <template>
-  <div class="my-card d-flex justify-content-left flex-wrap w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince">
+  <div class="my-card d-flex justify-content-left flex-wrap w-100 mb-2" v-if="isDisplay && isDisplayByPriceFilter && isDisplayByPriceProvince && isDisplaySearch">
     <div class="col-12 col-lg-3 p-0 p-lg-1">
       <div class="card-img" :style="bgImage" />
     </div>
@@ -100,6 +100,12 @@ export default {
       } else {
         return this.provinceSelected === this.merchant.addressProvinceName
       }
+    },
+    searchedText() {
+      return this.$store.state.searchedText
+    },
+    isDisplaySearch() {
+      return this.searchedText === '' || this.merchant.shopNameTH.includes(this.searchedText);
     }
   }
 }
