@@ -4,7 +4,7 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const proxyUrl = 'http://localhost:3000'
+const proxyUrl = 'https://proxy-cors-by-plumest.herokuapp.com'
 const url = 'https://panjs.com/ywc18.json'
 
 export default new Vuex.Store({

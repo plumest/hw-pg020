@@ -227,7 +227,7 @@
     </div>
 
     <ul class="breadcrumb px-3 px-md-4 d-flex justify-content-start align-items-center">
-      <li><a href="https://search-merchant.xn--42caj4e6bk1f5b1j.com/">หน้าแรก</a></li>
+      <li><a href="/">หน้าแรก</a></li>
       <li>ค้นหา</li>
     </ul>
 

@@ -1,0 +1,4 @@
+[submodule "proxy-cors"]
+	path = proxy-cors
+	url = https://github.com/plumest/proxy-cors.git
+	branch = main
