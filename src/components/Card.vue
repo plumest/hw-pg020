@@ -105,7 +105,7 @@ export default {
       return this.$store.state.searchedText
     },
     isDisplaySearch() {
-      return this.searchedText === '' || this.merchant.shopNameTH.includes(this.searchedText);
+      return this.searchedText === '' || this.merchant.shopNameTH.toLowerCase().includes(this.searchedText.toLowerCase());
     }
   }
 }
