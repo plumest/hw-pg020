@@ -430,8 +430,8 @@ export default {
       return this.$store.state.searchedText
     }
   },
-  mounted() {
-    this.$store.dispatch('loadData')
+  async mounted() {
+    await this.$store.dispatch('loadData')
   },
   methods: {
     handleSearch(value) {
