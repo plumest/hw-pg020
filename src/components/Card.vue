@@ -26,7 +26,7 @@
       <div class="break-line" />
 
       <!--   Row 3   -->
-      <p class="card-text mb-1" v-html="merchant.highlightText" />
+      <p class="card-text mb-1" domPropsInnerHTML={this.merchant.highlightText} />
 
       <!--   Row 4   -->
       <p class="mb-2"><strong>เมนูแนะนำ: </strong>{{ merchant.recommendedItems.join(', ') }}</p>
